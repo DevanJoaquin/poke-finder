@@ -1,13 +1,27 @@
-import './App.css'
+import { useEffect, useState } from "react";
+import "./styles.css";
+import Title from "./Title.js";
+import Entry from "./Entry.js";
+import Info from "./Info.js";
 
-function App() {
+export default function App() {
+  const [name, setName] = useState("");
+  const [data, setData] = useState("");
+
+  useEffect(() => {
+    const pokemon = encodeURIComponent(name.toLowerCase());
+    const url = `https://pokeapi.co/api/v2/pokemon/${pokemon}/`;
+    fetch(url)
+      .then((r) => r.json())
+      .then((r) => setData(r))
+      .catch((e) => setData(`${e}`));
+  }, [name]);
 
   return (
-    <>
-      <h1>Pokemon Finder</h1>
-      <h2>Imagine we could find hib too</h2>
-    </>
-  )
+    <div className="App">
+      <Title text="Poké Finder" />
+      <Entry action={setName} />
+      <Info name={name} data={data} />
+    </div>
+  );
 }
-
-export default App
